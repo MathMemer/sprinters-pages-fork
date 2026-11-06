@@ -16,6 +16,8 @@ concurrency:
 
 jobs:
   create-assignments:
+    # Fork guard: only the teacher's repo has the Spring bot secrets; skip in student forks.
+    if: github.repository == 'Open-Coding-Society/pages'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
