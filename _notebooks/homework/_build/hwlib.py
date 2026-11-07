@@ -66,6 +66,7 @@ class Notebook:
         self.cells = []
         self.n = 0
         self.points = []
+        self.exec_n = 0
         self.filename = f'{DATE}-csa-unit_{unit:02d}-{unit}_{lesson_no}-hw.ipynb'
 
     # --- raw cell helpers
@@ -102,15 +103,23 @@ author: {AUTHOR}
 
     def runner(self, challenge, src, show_output=True, output_note='all predictions matched', output_text=None,
                random_note=False):
-        """Add a CODE_RUNNER cell (ends with ClassName.main(null);) and, after it, a visible output block."""
+        """Add a plain Java code cell with its real output saved in the cell, then a one-line result note.
+
+        The cell ends with ClassName.main(null); (the Java kernel idiom). It has NO `// CODE_RUNNER:` marker, so the
+        converter keeps the saved output and shows it under the code as static text; nothing calls a backend.
+        `challenge` is kept only so the build scripts read like the lesson; it is not written to the notebook.
+        """
         cls = _public_class(src)
-        body = f'// CODE_RUNNER: {challenge}\n' + src.rstrip('\n') + f'\n\n{cls}.main(null);\n'
-        self.cells.append({'cell_type': 'code', 'execution_count': None, 'id': self._id('code'), 'metadata': {},
-                           'outputs': [], 'source': self._lines(body)})
+        body = src.rstrip('\n') + f'\n\n{cls}.main(null);\n'
+        out = output_text if output_text is not None else java_run(src)
+        self.exec_n += 1
+        self.cells.append({'cell_type': 'code', 'execution_count': self.exec_n, 'id': self._id('code'), 'metadata': {},
+                           'outputs': [{'output_type': 'stream', 'name': 'stdout',
+                                        'text': (out + '\n').splitlines(True)}],
+                           'source': self._lines(body)})
         if show_output:
-            out = output_text if output_text is not None else java_run(src)
             note = f'{output_note}; random values change every run' if random_note else output_note
-            self.md(f'**Output from my run** ({note}):\n\n```\n{out}\n```')
+            self.md(f'**Result:** {note}.')
 
     def rubric(self, text, points):
         """Add the grading section. `points` are the leaf points; they must sum to 1.0 (lesson convention)."""
@@ -157,6 +166,21 @@ def submission_notes(lines):
 # ------------------------------------------------------------------ audit
 
 
+def _out_text(cell):
+    """Join a code cell's saved stream outputs (nbformat stores `text` as a list of lines or a string)."""
+    parts = []
+    for o in cell.get('outputs', []):
+        t = o.get('text', '')
+        parts.append(''.join(t) if isinstance(t, list) else t)
+    return ''.join(parts)
+
+
+def outputs_of(path):
+    """Saved output text of each code cell, in order (for the per-lesson checks in the build scripts)."""
+    cells = json.load(open(path))['cells']
+    return [_out_text(c) for c in cells if c['cell_type'] == 'code']
+
+
 def audit(path, template, expect_runners, extra=()):
     """Check a built notebook against the section 6 conventions. `template` = front matter values the lesson requires."""
     nb = json.load(open(path))
@@ -176,18 +200,20 @@ def audit(path, template, expect_runners, extra=()):
     chk('author is a GitHub id', keys.get('author') not in (None, 'yourGithubID'))
     chk('codemirror: true', keys.get('codemirror') == 'true')
     chk('no assignment/team_teach/microblog keys', not any(k in keys for k in ('assignment', 'team_teach', 'microblog')))
-    chk(f'{expect_runners} code runners', len(codes) == expect_runners)
+    outs = [_out_text(cs[i]) for i in codes]
+    chk(f'{expect_runners} code cells', len(codes) == expect_runners)
     chk('every code cell preceded by a markdown cell', all(cs[i - 1]['cell_type'] == 'markdown' for i in codes))
     chk('every code cell ends with ClassName.main(null);',
         all(re.match(r'^\w+\.main\(null\);$', src(cs[i]).strip().split('\n')[-1]) for i in codes))
-    chk('CODE_RUNNER marker uses the colon form', all(src(cs[i]).startswith('// CODE_RUNNER: ') for i in codes))
+    chk('no CODE_RUNNER marker (plain cells keep their saved output)', 'CODE_RUNNER' not in allt)
     chk('exactly one public class per code cell',
         all(len(re.findall(r'^public class ', src(cs[i]), re.M)) == 1 for i in codes))
-    chk('output block after every runner', all('Output from my run' in src(cs[i + 1]) or 'Compiler message' in src(cs[i + 1])
-                                               for i in codes))
-    chk('prediction/expected content before every runner',
+    chk('every code cell has its real output saved in the cell', all(o.strip() for o in outs))
+    chk('prediction/expected content before every code cell',
         all(re.search(r'prediction|expected|trace|My ', src(cs[i - 1]), re.I) for i in codes))
-    chk('no FAIL in saved outputs', 'FAIL:' not in ''.join(src(c) for c in cs if 'Output from my run' in src(c)))
+    chk('no FAIL in saved outputs', not any('FAIL:' in o for o in outs))
+    chk('no wording that promises a Run button on this page',
+        not re.search(r'Press \*\*Run\*\*|Java code runner|press Run', allt))
     chk('Submission Safety Rules present', 'Submission Safety Rules (Read First)' in allt)
     chk('Grading Plan (1 Point Total) present', 'Grading Plan (1 Point Total)' in allt)
     chk('Quick Validation Checklist present', 'Quick Validation Checklist' in allt)

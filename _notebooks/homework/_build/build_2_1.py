@@ -5,7 +5,7 @@ import sys
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from hwlib import Notebook, safety_rules, audit  # noqa: E402
+from hwlib import Notebook, safety_rules, audit, outputs_of  # noqa: E402
 
 TOPIC = 'Algorithms-with-Selection-and-Repetition'
 nb = Notebook(2, '1', TOPIC)
@@ -17,7 +17,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [2.01 Algorithms with Selection and Repetition]({{ site.baseurl }}/csa/unit_02/2_1). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [2.01 Algorithms with Selection and Repetition]({{ site.baseurl }}/csa/unit_02/2_1). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** every algorithm in this unit is built from three blocks.
 
@@ -186,7 +186,7 @@ nb.rubric('''
 
 - **0.8 points: Homework completion**
   - **0.4 Part 1 algorithm:** A written algorithm of six steps with one selection (step 5) and one repetition (step 3), in the pseudocode style used in the lesson table.
-  - **0.3 Part 2 Java:** The same algorithm in the runner with a `while` loop for the repetition and an `if` for the selection, printing a line per step.
+  - **0.3 Part 2 Java:** The same algorithm in the code cell with a `while` loop for the repetition and an `if` for the selection, printing a line per step.
   - **0.1 Notebook quality:** Every code cell executed with output visible, and a markdown cell before each code section explaining the concept.
 
 #### Quick Validation Checklist
@@ -205,7 +205,7 @@ codes = [''.join(c['source']) for c in cells if c['cell_type'] == 'code']
 allt = '\n'.join(''.join(c['source']) for c in cells)
 alg = re.search(r'Algorithm: Cook a pot of pasta\n(.*?)\n```', allt, re.S).group(1)
 numbered = re.findall(r'^\d+\. ', alg, re.M)
-out_pop = re.search(r'Output from my run\*\* \(all three.*?```\n(.*?)\n```', allt, re.S).group(1)
+out_pop = outputs_of(path)[0]
 extra = [
     ('Popcorn has a while loop and an if', 'while (total < price)' in codes[0] and 'if (total > price)' in codes[0]),
     ('Popcorn output: 13 + 7 + 4 Inserted lines', out_pop.count('Inserted') == 24),

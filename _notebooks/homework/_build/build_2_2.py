@@ -5,7 +5,7 @@ import sys
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from hwlib import Notebook, safety_rules, audit, java_compile_error  # noqa: E402
+from hwlib import Notebook, safety_rules, audit, java_compile_error, outputs_of  # noqa: E402
 
 TOPIC = 'Boolean-Expressions'
 nb = Notebook(2, '2', TOPIC)
@@ -17,7 +17,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [2.02 Boolean Expressions]({{ site.baseurl }}/csa/unit_02/2_2). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [2.02 Boolean Expressions]({{ site.baseurl }}/csa/unit_02/2_2). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** a Boolean expression is a yes or no question that Java answers with `true` or `false`. Relational operators compare two values.
 
@@ -115,7 +115,7 @@ public class BonusCheck {
 nb.md('''
 ### Homework Hack
 
-1. Complete the runner: write the four Boolean expressions described in the comments and print them.
+1. Complete the code cell: write the four Boolean expressions described in the comments and print them.
 2. Answer the two quick checks under it.
 
 #### Part 1: Four Boolean expressions
@@ -215,7 +215,7 @@ nb.rubric('''
   I fixed both bugs so the program compiles and prints `Bonus unlocked: true` and `Exact score: false`.
 
 - **0.8 points: Homework completion**
-  - **0.5 Four expressions:** The four Boolean expressions from the runner comments are written correctly (`speed > limit`, `speed == limit`, `age >= 18`, `speed % 2 != 0`) and printed, and they were also tested on two more cases.
+  - **0.5 Four expressions:** The four Boolean expressions from the code comments are written correctly (`speed > limit`, `speed == limit`, `age >= 18`, `speed % 2 != 0`) and printed, and they were also tested on two more cases.
   - **0.2 Quick checks:** Both quick check questions answered with the reasoning shown (`true` and `false`, with a hand trace for each).
   - **0.1 Notebook quality:** Every code cell executed with output visible, and a markdown cell before each code section explaining the concept.
 
@@ -234,14 +234,15 @@ cells = json.load(open(path))['cells']
 codes = [''.join(c['source']) for c in cells if c['cell_type'] == 'code']
 allt = '\n'.join(''.join(c['source']) for c in cells)
 nocomment = [re.sub(r'//.*', '', c) for c in codes]
+outs = outputs_of(path)
 extra = [
-    ('3 runners (popcorn, homework, quick checks)', len(codes) == 3),
+    ('3 code cells (popcorn, homework, quick checks)', len(codes) == 3),
     ('Popcorn: no "=>" left and ">=" and "==" used', '=>' not in nocomment[0] and '>=' in nocomment[0] and 'score == target' in nocomment[0]),
     ('Popcorn: comments name Bug 1 and Bug 2', 'Bug 1' in codes[0] and 'Bug 2' in codes[0]),
-    ('Popcorn output reads the required lines', 'Bonus unlocked: true' in allt and 'Exact score: false' in allt),
+    ('Popcorn output reads the required lines', outs[0].strip() == 'Bonus unlocked: true\nExact score: false'),
     ('four expressions written (no leftover "= false; // TODO")', 'TODO' not in codes[1] and all(e in codes[1] for e in ('speed > limit', 'speed == limit', 'age >= 18', 'speed % 2 != 0'))),
     ('no assignment "=" used as a comparison in any condition', not any(re.search(r'if \([^=!<>]*[^=!<>]=[^=]', c) for c in nocomment)),
-    ('quick check answers true and false shown', 'Question 1: true' in allt and 'Question 2: false' in allt),
+    ('quick check answers true and false shown', outs[2].strip() == 'Question 1: true\nQuestion 2: false'),
     ('original compiler error captured for Bug 1', 'error:' in allt),
 ]
 ok = audit(path, {

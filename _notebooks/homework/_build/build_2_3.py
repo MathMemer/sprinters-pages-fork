@@ -5,7 +5,7 @@ import sys
 import pathlib
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from hwlib import Notebook, safety_rules, audit, java_compile_error  # noqa: E402
+from hwlib import Notebook, safety_rules, audit, java_compile_error, outputs_of  # noqa: E402
 
 TOPIC = 'If-Statements'
 nb = Notebook(2, '3', TOPIC)
@@ -17,7 +17,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [2.03 if Statements]({{ site.baseurl }}/csa/unit_02/2_3). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [2.03 if Statements]({{ site.baseurl }}/csa/unit_02/2_3). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** an `if` statement runs its body only when its condition is `true`. An `else` adds the other way. Code after the closing brace runs either way.
 
@@ -112,7 +112,7 @@ nb.md('''
 
 Two short tasks.
 
-1. Finish the runner below. A store gives free shipping on orders of $50 or more. Print `Free shipping` or `Shipping: $5.99`, then always print the order total.
+1. Finish the code cell below. A store gives free shipping on orders of $50 or more. Print `Free shipping` or `Shipping: $5.99`, then always print the order total.
 2. Answer the quick check.
 
 #### Task 1: Free shipping
@@ -217,16 +217,17 @@ cells = json.load(open(path))['cells']
 codes = [''.join(c['source']) for c in cells if c['cell_type'] == 'code']
 allt = '\n'.join(''.join(c['source']) for c in cells)
 nocomment = [re.sub(r'//.*', '', c) for c in codes]
+outs = outputs_of(path)
 extra = [
-    ('3 runners (popcorn, homework, quick check)', len(codes) == 3),
+    ('3 code cells (popcorn, homework, quick check)', len(codes) == 3),
     ("Popcorn: no single-quoted text left, semicolons present", "'Number" not in nocomment[0] and 'println("Number is odd");' in nocomment[0]),
     ('Popcorn: comments name Error 1 and Error 2', 'Error 1' in codes[0] and 'Error 2' in codes[0]),
-    ('Popcorn output reads "Number is even"', 'Number is even' in allt),
+    ('Popcorn output reads "Number is even" then "Number is odd"', outs[0].strip() == 'Number is even\nNumber is odd'),
     ('homework uses if-else with >= 50 and braces', 'orderTotal >= 50' in codes[1] and 'else {' in codes[1]),
     ('order total printed outside the branch', re.search(r'\}\s*\n\s*//[^\n]*\n\s*System\.out\.println\("Order total', codes[1]) is not None),
-    ('exact-50 order takes the free branch in the output', re.search(r'exactly 50 ---\nFree shipping\nOrder total: \$50\.0', allt) is not None),
-    ('both branches appear in the output', 'Shipping: $5.99' in allt and 'Free shipping' in allt),
-    ('quick check prints exactly one line (Level 7)', allt.rstrip().count('Level 7') >= 1 and 'Expert' not in re.search(r'LevelCheck.*', allt, re.S).group(0).split('Output from my run')[-1]),
+    ('exact-50 order takes the free branch in the output', re.search(r'exactly 50 ---\nFree shipping\nOrder total: \$50\.0', outs[1]) is not None),
+    ('both branches appear in the output', 'Shipping: $5.99' in outs[1] and 'Free shipping' in outs[1]),
+    ('quick check prints exactly one line (Level 7)', outs[2].strip() == 'Level 7'),
     ('original compiler errors captured', 'error:' in allt),
 ]
 ok = audit(path, {

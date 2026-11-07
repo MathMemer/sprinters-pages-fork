@@ -15,7 +15,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [1.06 Compound Assignment Operators]({{ site.baseurl }}/csa/unit_01/1_6). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [1.06 Compound Assignment Operators]({{ site.baseurl }}/csa/unit_01/1_6). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** a compound assignment operator updates a variable using its own old value. `x += 5` means `x = x + 5`, but it is shorter and the variable name is written once.
 

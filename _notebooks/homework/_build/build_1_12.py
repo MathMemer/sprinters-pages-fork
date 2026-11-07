@@ -16,7 +16,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [1.12 Classes & Objects]({{ site.baseurl }}/csa/unit_01/1_12). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [1.12 Classes & Objects]({{ site.baseurl }}/csa/unit_01/1_12). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** a class is a blueprint (fields and methods). An object is one instance of that class, made with `new`. A variable holds a **reference** to an object, not the object itself.
 
@@ -59,7 +59,7 @@ nb.md('''
 
 **What the important lines do:** `void printInfo()` reads this object's own `title` and `pages`. `Book book = new Book();` creates the object. The two assignment lines fill in its fields before `printInfo()` runs.
 
-**Note on "one class per cell":** this task needs two classes (`Book` and the class with `main`), as the lesson's starter does. There is still exactly one `public` class, and it is the one the runner calls.
+**Note on "one class per cell":** this task needs two classes (`Book` and the class with `main`), as the lesson's starter does. There is still exactly one `public` class, and it is the one named in the cell's last line.
 ''')
 nb.runner('Popcorn Hack. Finished printInfo(), one Book created, fields set, and called', r'''
 class Book {
@@ -159,9 +159,9 @@ nb.rubric('''
 
 | Part | Points | What earns the points | Where I show it |
 | :--- | :--- | :--- | :--- |
-| Popcorn | 0.2 | `Book` finished, one object created, `printInfo()` called, and the cell runs. | Popcorn Hack: `Book` runner and its output |
+| Popcorn | 0.2 | `Book` finished, one object created, `printInfo()` called, and the cell runs. | Popcorn Hack: `Book` cell and its output |
 | MCQ | 0.2 | 4 or 5 correct. 0.15 for 3, 0.1 if every question was answered. | Taken on the lesson page; score line goes in the Submission Notes |
-| Homework: class/object usage | 0.2 | `Author` class and objects created correctly with `new`. | `Author` class, `new Author()` four times in the homework runner |
+| Homework: class/object usage | 0.2 | `Author` class and objects created correctly with `new`. | `Author` class, `new Author()` four times in the homework cell |
 | Homework: aliasing prediction | 0.25 | Prediction written before running, and the aliased pair's shared value is correctly demonstrated. | Prediction table and `predictAliased`; `a1`/`a2` both print `Ada` |
 | Homework: separate objects | 0.1 | Separate pair correctly shown as two different objects (`==` is `false`). | `b1 == b2` prints `false` |
 | Homework: `Object` method | 0.05 | One method inherited from `Object` is called and its result printed. | `a1.getClass()` prints `class Author` |

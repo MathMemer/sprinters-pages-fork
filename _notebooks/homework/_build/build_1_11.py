@@ -20,7 +20,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [1.11 Math Class]({{ site.baseurl }}/csa/unit_01/1_11). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [1.11 Math Class]({{ site.baseurl }}/csa/unit_01/1_11). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** the `Math` class has static methods, so I call them on the class name with no object: `Math.abs(-8)`.
 
@@ -272,7 +272,7 @@ nb.rubric('''
 
 | Part | Points | What earns the points | Where I show it |
 | :--- | :--- | :--- | :--- |
-| Popcorn 1 | 0.1 | Three `Math` predictions and a distance expression, cell runs. | Popcorn Hack #1: prediction table, `PopcornMath` runner |
+| Popcorn 1 | 0.1 | Three `Math` predictions and a distance expression, cell runs. | Popcorn Hack #1: prediction table, `PopcornMath` cell |
 | Popcorn 2 | 0.1 | Random 10-20 range built correctly and tested more than once. | Popcorn Hack #2: five rolls, PASS check, and I ran it again |
 | MCQ | 0.2 | 4 or 5 correct. 0.15 for 3, 0.1 if every question was answered. | Taken on the lesson page; score line goes in the Submission Notes |
 | Homework: rarity range | 0.2 | Rarity roll is between 1 and 100 and maps to the correct name. | `randomBetween(1, 100)`, `rarityFor`, and the boundary tests |
@@ -297,7 +297,7 @@ cells = json.load(open(path))['cells']
 codes = [''.join(c['source']) for c in cells if c['cell_type'] == 'code']
 allt = '\n'.join(''.join(c['source']) for c in cells)
 extra = [
-    ('3 runners (2 popcorn + homework)', len(codes) == 3),
+    ('3 code cells (2 popcorn + homework)', len(codes) == 3),
     ('no "?" placeholders left', not any('"?"' in c for c in codes)),
     ('distance uses Math.sqrt and Math.pow', 'Math.sqrt(Math.pow(3 - 0, 2) + Math.pow(4 - 0, 2))' in codes[0]),
     ('random range formula uses (max - min + 1)', '(max - min + 1)' in codes[1] and '(max - min + 1)' in codes[2]),

@@ -16,7 +16,7 @@ nb.front_matter(
 nb.md('''
 ## 1. Overview
 
-This is my homework notebook for [1.10 Calling Class Methods]({{ site.baseurl }}/csa/unit_01/1_10). Every code cell below is a Java code runner. Press **Run** to execute it.
+This is my homework notebook for [1.10 Calling Class Methods]({{ site.baseurl }}/csa/unit_01/1_10). Each code cell below is Java code with the output from a real run (`javac` and `java` 21) saved under it, so the page reads the same without a Java server.
 
 **Key idea:** a method marked `static` belongs to the class, so it is called on the class name. A method without `static` belongs to each object, so it needs an object first.
 
@@ -199,11 +199,11 @@ nb.rubric('''
 
 | Part | Points | What earns the points | Where I show it |
 | :--- | :--- | :--- | :--- |
-| Popcorn | 0.2 | Four WORKS/ERROR predictions made and the cell runs. | Popcorn Hack: prediction table, `Robot` runner, output |
+| Popcorn | 0.2 | Four WORKS/ERROR predictions made and the cell runs. | Popcorn Hack: prediction table, `Robot` cell, output |
 | MCQ | 0.2 | 4 or 5 correct. 0.15 for 3, 0.1 if every question was answered. | Taken on the lesson page; score line goes in the Submission Notes |
-| Homework: class method call | 0.1 | `rules()` is called as a class method. | `Game.rules();` in the `Game` runner |
+| Homework: class method call | 0.1 | `rules()` is called as a class method. | `Game.rules();` in the `Game` cell |
 | Homework: object call | 0.2 | A `Game` object is created and `showPlayer()` is called on it. | `Game match = new Game("Mia"); match.showPlayer();` |
-| Homework: compiles and runs | 0.15 | The corrected program compiles and prints output. | Output block under the `Game` runner |
+| Homework: compiles and runs | 0.15 | The corrected program compiles and prints output. | Output under the `Game` cell |
 | Homework: explanation | 0.15 | Explanation says `showPlayer()` is an instance method that needs an object, so the class-name call was invalid. | "Explanation of the original error" |
 | **Total** | **1.0** | | |
 
