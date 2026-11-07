@@ -18,9 +18,12 @@ No pull requests upstream.
 | 1.10 Calling Class Methods | `2025-09-21-csa-unit_01-1_10-hw.ipynb` | `/csa/unit_01/1_10_hw` | built, audited |
 | 1.11 Math Class | `2025-09-21-csa-unit_01-1_11-hw.ipynb` | `/csa/unit_01/1_11_student_hw` | built, audited |
 | 1.12 Classes & Objects | `2025-09-21-csa-unit_01-1_12-hw.ipynb` | `/csa/unit_01/1_12_hw` | built, audited |
+| 2.1 Algorithms with Selection and Repetition | `2025-09-21-csa-unit_02-2_1-hw.ipynb` | `/csa/unit_02/2_1_hw` | built, audited |
+| 2.2 Boolean Expressions | `2025-09-21-csa-unit_02-2_2-hw.ipynb` | `/csa/unit_02/2_2_hw` | built, audited |
+| 2.3 if Statements | `2025-09-21-csa-unit_02-2_3-hw.ipynb` | `/csa/unit_02/2_3_hw` | built, audited |
 
-Not generated yet: Unit 2 (2.1 to 2.12), Unit 3 (3.1, 3.3, 3.7, 3.8, 3.9), Unit 4 (4.2, 4.3, 4.6, 4.7, 4.8, 4.10,
-4.13 to 4.15, 4.17). Unit 1 lessons whose text does **not** require a notebook, so they are skipped unless asked:
+Not generated yet: Unit 2 (2.4 to 2.12), Unit 3 (3.1, 3.3, 3.7, 3.8, 3.9), Unit 4 (4.2, 4.3, 4.6, 4.7, 4.8, 4.10,
+4.13 to 4.15, 4.17). 4.4 and 4.16 say "you do not need to create a separate notebook" (submit the saved runners instead). Unit 1 lessons whose text does **not** require a notebook, so they are skipped unless asked:
 1.7, 1.8 ("a Jupyter notebook or Java file"), 1.9 (submits in the page), 1.13 to 1.15.
 
 "Audited" means `hwlib.audit` passes (see below) and the notebook converts to a page with one Run button per code cell.
@@ -73,6 +76,15 @@ The lessons leave some things open. This is what every notebook here does, so th
   first, then overflow, zero, negative, and boundary values where they apply).
 - Where the lesson leaves a choice open (for example 1.11's rarity cutoffs), I pick values and write them in a table.
 
+**Unit 2 differences** (2.1 to 2.12)
+- The lesson's front-matter template has no `lesson_part`; I still add it so every notebook has the same keys.
+- No paste-in Submission Notes block and no MCQ points: the rubric is Popcorn 0.2 plus the homework parts and 0.1 for notebook quality.
+- A written part (2.1's Part 1) goes in a markdown cell, in the lesson's pseudocode style.
+- Where the lesson has a "Homework Quick Check", I answer it in a markdown table with the hand trace, then add a small
+  runner that prints the real answer.
+- Where the Popcorn is "fix the bugs", the notebook shows the original `javac` error, then the fixed runner with a comment naming each bug.
+- Homework logic goes in a method with parameters so one run can also test edge cases (boundaries and both branches of an `if`).
+
 **MCQ**
 - MCQs are taken on the lesson page. I do not invent a score: the `MCQ N.M:` line in the Submission Notes stays
   `<paste your score line ...>` until the MCQ is taken. It is worth 0.2 in those lessons.
@@ -90,7 +102,7 @@ make serve                                          # then open http://localhost
 
 - `_build/hwlib.py`: the shared helpers (`Notebook`, `safety_rules`, `submission_notes`, `java_run`, `java_compile_error`)
   and `audit`, which checks the conventions above.
-- `_build/build_<lesson>.py`: one script per notebook; 1.6, 1.10, 1.11 and 1.12 are built this way.
+- `_build/build_<lesson>.py`: one script per notebook; 1.6, 1.10, 1.11, 1.12, 2.1, 2.2 and 2.3 are built this way.
   The 1.5 notebook was built earlier by a one-off script, and it passes the same audit.
 - Never hand-edit the generated `_posts/homework/*_IPYNB_2_.md`; edit the build script or notebook and convert again.
 
