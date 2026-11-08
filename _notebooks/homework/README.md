@@ -27,8 +27,9 @@ No pull requests upstream.
 | 2.7 while Loops | `2025-09-21-csa-unit_02-2_7-hw.ipynb` | `/csa/unit_02/2_7_hw` | built, audited |
 | 2.8 for Loops | `2025-09-21-csa-unit_02-2_8-hw.ipynb` | `/csa/unit_02/2_8_hw` | built, audited |
 | 2.9 Selection and Iteration Algorithms | `2025-09-21-csa-unit_02-2_9-hw.ipynb` | `/csa/unit_02/2_9_hw` | built, audited |
+| 2.10 String Algorithms | `2025-09-21-csa-unit_02-2_10-hw.ipynb` | `/csa/unit_02/2_10_hw` | built, audited |
 
-Not generated yet: Unit 2 (2.10 to 2.12), Unit 3 (3.1, 3.3, 3.7, 3.8, 3.9), Unit 4 (4.2, 4.3, 4.6, 4.7, 4.8, 4.10,
+Not generated yet: Unit 2 (2.11 and 2.12), Unit 3 (3.1, 3.3, 3.7, 3.8, 3.9), Unit 4 (4.2, 4.3, 4.6, 4.7, 4.8, 4.10,
 4.13 to 4.15, 4.17). 4.4 and 4.16 say "you do not need to create a separate notebook" (submit the saved code runners instead). Unit 1 lessons whose text does **not** require a notebook, so they are skipped unless asked:
 1.7, 1.8 ("a Jupyter notebook or Java file"), 1.9 (submits in the page), 1.13 to 1.15.
 
@@ -112,7 +113,7 @@ make serve                                          # then open http://localhost
 
 - `_build/hwlib.py`: the shared helpers (`Notebook`, `safety_rules`, `submission_notes`, `java_run`, `java_compile_error`, `outputs_of`)
   and `audit`, which checks the conventions above.
-- `_build/build_<lesson>.py`: one script per notebook; 1.5, 1.6, 1.10, 1.11, 1.12 and 2.1 to 2.9 are all built this way.
+- `_build/build_<lesson>.py`: one script per notebook; 1.5, 1.6, 1.10, 1.11, 1.12 and 2.1 to 2.10 are all built this way.
 - Never hand-edit the generated `_posts/homework/*_IPYNB_2_.md`; edit the build script or notebook and convert again.
 
 ## Publishing
